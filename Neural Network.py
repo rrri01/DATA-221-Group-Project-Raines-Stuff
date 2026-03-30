@@ -8,7 +8,7 @@ from sklearn.metrics import confusion_matrix, accuracy_score, recall_score, prec
 import numpy as np
 
 from tensorflow.keras.utils import to_categorical
-from sklearn.preprocessing import LabelEncoder
+from sklearn.preprocessing import LabelEncoder, StandardScaler
 
 california_house_prices = pd.read_csv('housing.csv', delimiter=',')
 
@@ -26,11 +26,13 @@ mapping = {
 
 california_house_prices["ocean_proximity"] = california_house_prices["ocean_proximity"].map(mapping)
 
-
 # creates feature matrix X of all columns except "median_house_value" and create label vector y as "median_house_value"
 feature_matrix = california_house_prices.drop("median_house_value", axis=1)
 target_prices = california_house_prices["median_house_value"]
 
 # splits the data into training data and testing data
-x_train, x_test, y_train, y_test = train_test_split(feature_matrix, target_prices, test_size=0.3, random_state=42)
+features_train, features_test, y_train, y_test = train_test_split(feature_matrix, target_prices, test_size=0.3, random_state=42)
 
+scaling = StandardScaler()
+features_train = scaling.fit_transform(features_train)
+features_test = scaling.transform(features_test)
