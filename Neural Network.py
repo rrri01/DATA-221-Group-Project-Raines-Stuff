@@ -2,6 +2,7 @@
 # group repository link for my own reference: https://github.com/chloeptrsn/DATA-221-Project.git
 
 import pandas as pd
+from sklearn import metrics
 
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import confusion_matrix, accuracy_score, recall_score, precision_score, f1_score
@@ -36,7 +37,7 @@ feature_matrix = california_house_prices.drop("median_house_value", axis=1)
 target_prices = california_house_prices["median_house_value"]
 
 # splits the data into training data and testing data
-features_train, features_test, y_train, y_test = train_test_split(feature_matrix, target_prices, test_size=0.3, random_state=42)
+features_train, features_test, labels_train, labels_test = train_test_split(feature_matrix, target_prices, test_size=0.3, random_state=42)
 
 # scale data:
 scaling = StandardScaler()
@@ -66,9 +67,14 @@ neural_network_model.compile(loss='mean_absolute_error')
 # training and implementation
 neural_network_model.fit(feature_matrix, target_prices, epochs=10)
 
-test_mae = neural_network_model.evaluate(features_test, y_test)
-train_mae = neural_network_model.evaluate(features_train, y_train)
+predicted_labels = neural_network_model.predict(features_test, verbose = 1)
+
+test_mae = neural_network_model.evaluate(features_test, labels_test)
+train_mae = neural_network_model.evaluate(features_train, labels_train)
 
 print(f"Testing Mean Absolute Error: {test_mae}")
 print(f"Training Mean Absolute Error: {train_mae}")
 
+rmse = metrics.mean_squared_error(labels_test, predicted_labels)
+r2 = metrics.r2_score(labels_test, predicted_labels)
+print("rmse: ", rmse, "r2", r2)
