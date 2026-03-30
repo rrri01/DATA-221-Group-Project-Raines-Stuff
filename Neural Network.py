@@ -60,3 +60,15 @@ neural_network_model.add(third_hidden_layer)
 output_layer = Dense(1)
 neural_network_model.add(output_layer)
 
+# compile the model
+neural_network_model.compile(loss='mean_absolute_error')
+
+# training and implementation
+neural_network_model.fit(feature_matrix, target_prices, epochs=10)
+
+test_mae = neural_network_model.evaluate(features_test, y_test)
+train_mae = neural_network_model.evaluate(features_train, y_train)
+
+print(f"Testing Mean Absolute Error: {test_mae}")
+print(f"Training Mean Absolute Error: {train_mae}")
+
